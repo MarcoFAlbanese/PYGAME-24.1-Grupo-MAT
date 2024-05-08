@@ -25,6 +25,14 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH//4
         self.rect.centery = HEIGHT//2
+class Player (pygame.sprite.Sprite):  ### classe personagem
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50,50))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = WIDTH//4
+        self.rect.centery = HEIGHT//2
 
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
@@ -33,14 +41,33 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH-50
         self.rect.centery = random.randint (0, HEIGHT)
+class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50,50))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = 100
+        self.rect.y = 100
+       
+    def update(self):
+        self.rect.x -= 5  
 
 
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
 obstaculos = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+
 #adiciona o player na lista de sprites
 player = Player()
 all_sprites.add(player)
+player = Player()
+all_sprites.add(player)
+
+obstaculo = Obstaculos()
+all_sprites.add(obstaculo)
+
 
 
 # ===== Loop principal =====
@@ -54,6 +81,8 @@ while game:
     # ----- Gera saídas
     #window.fill((255, 255, 255))  # Preenche com a cor branca
     window.fill((255, 255, 255))
+    all_sprites.draw(window)
+    window.fill((255 , 255, 255))
     all_sprites.draw(window)
 
 
