@@ -11,7 +11,7 @@ WIDTH = 1000
 HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
-player_image = pygame.image.load('PYGAME-24.1-Grupo-MAT/assets/player.png').convert()
+player_image = pygame.image.load('PYGAME-24.1-Grupo-MAT/assets/player.png').convert_alpha()
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
