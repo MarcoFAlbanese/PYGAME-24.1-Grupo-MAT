@@ -5,13 +5,13 @@ import random
 
 pygame.init()
 
-player_image = pygame.image.load('assets/player.png')
+
 # ----- Gera tela principal
 WIDTH = 1000
 HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
-
+player_image = pygame.image.load('PYGAME-24.1-Grupo-MAT/assets/player.png').convert()
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
@@ -19,7 +19,7 @@ game = True
 class Player (pygame.sprite.Sprite):  ### classe personagem
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = player_image
+        self.image = pygame.transform.scale(player_image, (32, 32))
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH//4
         self.rect.centery = HEIGHT//2
