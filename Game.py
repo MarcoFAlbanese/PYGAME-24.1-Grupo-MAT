@@ -15,37 +15,37 @@ pygame.display.set_caption('Passeio de Jetpack')
 BLACK = (0,0,0)
 game = True
 
-#class Player (pygame.sprite.Sprite):  ### classe personagem
-    #def __init__(self):
-        #pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface((50,50))
-        #self.image.fill(BLACK)
-        #self.rect = self.image.get_rect()
-        #self.rect.centerx = WIDTH//4
-        #self.rect.centery = HEIGHT//2
+class Player (pygame.sprite.Sprite):  ### classe personagem
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50,50))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = WIDTH//4
+        self.rect.centery = HEIGHT//2
 
-#class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
-    #def __init__(self):
-        #pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface((50,50))
-        #self.image.fill(0,255,0)
-        #self.rect = self.image.get_rect()
-        #self.rect.x = 100
-        #self.rect.y = 100
+class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50,50))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = 100
+        self.rect.y = 100
        
-    #def update(self):
-        #self.rect.x -= 5  
+    def update(self):
+        self.rect.x -= 5  
 
 
 #lista com todos sprites
-#all_sprites = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
 
 #adiciona o player na lista de sprites
-#player = Player()
-#all_sprites.add(player)
+player = Player()
+all_sprites.add(player)
 
-#obstaculo = Obstaculos()
-#all_sprites.add(obstaculo)
+obstaculo = Obstaculos()
+all_sprites.add(obstaculo)
 
 
 
@@ -60,7 +60,7 @@ while game:
     #obstaculo.update()
     # ----- Gera saídas
     window.fill((255 , 255, 255))
-    #all_sprites.draw(window)
+    all_sprites.draw(window)
 
 
     # ----- Atualiza estado do jogo
