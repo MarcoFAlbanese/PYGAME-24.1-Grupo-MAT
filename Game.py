@@ -2,8 +2,6 @@
 # ----- Importa e inicia pacotes
 import pygame
 import random
-imagem_player = pygame.image.load('assets/PYGAME-24.1-Grupo-MAT/player.png').convert()
-
 
 pygame.init()
 
