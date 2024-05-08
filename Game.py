@@ -1,6 +1,7 @@
 # ===== Inicialização =====
 # ----- Importa e inicia pacotes
 import pygame
+from Sprites import Player, Obstaculos
 
 pygame.init()
 
@@ -13,18 +14,11 @@ pygame.display.set_caption('Passeio de Jetpack')
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
-class Player (pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50,50))
-        self.image.fill(BLACK)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = WIDTH//4
-        self.rect.centery = HEIGHT//2
+
 
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
-
+obstaculos = pygame.sprite.Group()
 #adiciona o player na lista de sprites
 player = Player()
 all_sprites.add(player)
