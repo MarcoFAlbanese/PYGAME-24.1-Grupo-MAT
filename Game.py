@@ -47,12 +47,13 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
         self.image = pygame.Surface((50,50))
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        self.rect.x = 100
-        self.rect.y = 100
+        self.rect.x = WIDTH
+        self.rect.y = random.randint(0,(HEIGHT-self.rect.height))
+        self.speed_x = -5
        
     def update(self):
-        self.rect.x -= 5  
-
+        self.rect.x += self.speed_x 
+        
 
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
@@ -63,8 +64,6 @@ obstaculos = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
 
-obstaculo = Obstaculos()
-all_sprites.add(obstaculo)
 
 clock = pygame.time.Clock()
 FPS = 50
@@ -91,6 +90,10 @@ while game:
     if space_pressed == True:
         player.speed_y = -8
     
+    if random.randrange(100)< 5:
+        obstaculo = Obstaculos()
+        all_sprites.add(obstaculo)
+        obstaculos.add(obstaculo)
 
     all_sprites.update()
 
