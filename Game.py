@@ -2,6 +2,7 @@
 # ----- Importa e inicia pacotes
 import pygame
 import random
+import math
 
 pygame.init()
 
@@ -54,6 +55,10 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def update(self):
         self.rect.x += self.speed_x 
         
+def distancia (sprite1,sprite2):
+    centro1 = sprite1.rect.center
+    centro2 = sprite2.rect.center
+    return (math.sqrt((centro1[0] - centro2[0]) ** 2 + (centro1[1] - centro2[1]) ** 2))
 
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
@@ -94,7 +99,8 @@ while game:
         obstaculo = Obstaculos()
         all_sprites.add(obstaculo)
         obstaculos.add(obstaculo)
-        if len(obstaculos) > 1 and pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]):
+
+        if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
             obstaculo.kill()
 
     all_sprites.update()
