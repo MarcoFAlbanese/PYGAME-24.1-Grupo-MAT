@@ -12,6 +12,7 @@ HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
 player_image = pygame.image.load('assets/player.png').convert_alpha()
+obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
@@ -44,11 +45,10 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50,50))
-        self.image.fill(BLACK)
+        self.image = pygame.transform.scale(obstaculo_image, (70, 50))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
-        self.rect.y = random.randint(0,(HEIGHT-self.rect.height))
+        self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
         self.speed_x = -5
        
     def update(self):
@@ -90,7 +90,7 @@ while game:
     if space_pressed == True:
         player.speed_y = -8
     
-    if random.randrange(100)< 5:
+    if random.randrange(100)< 3:
         obstaculo = Obstaculos()
         all_sprites.add(obstaculo)
         obstaculos.add(obstaculo)
