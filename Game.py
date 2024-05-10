@@ -96,6 +96,9 @@ while game:
         obstaculos.add(obstaculo)
 
     all_sprites.update()
+    hits = pygame.sprite.spritecollide(player, obstaculos, False)
+    if hits:
+        game = False
 
 
     # ----- Gera saídas
