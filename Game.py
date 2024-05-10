@@ -94,6 +94,8 @@ while game:
         obstaculo = Obstaculos()
         all_sprites.add(obstaculo)
         obstaculos.add(obstaculo)
+        if len(obstaculos) > 1 and pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]):
+            obstaculo.kill()
 
     all_sprites.update()
     hits = pygame.sprite.spritecollide(player, obstaculos, False)
