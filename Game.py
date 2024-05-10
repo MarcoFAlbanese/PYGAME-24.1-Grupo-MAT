@@ -11,7 +11,7 @@ WIDTH = 1000
 HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
-player_image = pygame.image.load('PYGAME-24.1-Grupo-MAT/assets/player.png').convert_alpha()
+player_image = pygame.image.load('assets/player.png').convert_alpha()
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
@@ -19,10 +19,25 @@ game = True
 class Player (pygame.sprite.Sprite):  ### classe personagem
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(player_image, (32, 32))
+        self.image = pygame.transform.scale(player_image, (85, 85))
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH//4
         self.rect.centery = HEIGHT//2
+        self.speed_y = 0
+    
+    def update(self):
+        self.speed_y +=1
+        self.rect.y += self.speed_y
+
+        if self.rect.top <= 0:
+            self.rect.top = 0
+            self.speed_y = 0
+
+        if self.rect.bottom >= HEIGHT:
+            self.rect.bottom = HEIGHT
+            self.speed_y = 0
+
+
 
 
 
@@ -51,19 +66,37 @@ all_sprites.add(player)
 obstaculo = Obstaculos()
 all_sprites.add(obstaculo)
 
+clock = pygame.time.Clock()
+FPS = 50
 
+space_pressed = False
 
 # ===== Loop principal =====
 while game:
+    clock.tick(FPS)
+
     # ----- Trata eventos
     for event in pygame.event.get():
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                space_pressed = True
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                space_pressed = False
+        
+    if space_pressed == True:
+        player.speed_y = -8
+    
+
+    all_sprites.update()
+
+
     # ----- Gera saídas
-    #window.fill((255, 255, 255))  # Preenche com a cor branca
-    window.fill((255, 255, 255))
+    window.fill((255, 255, 255))  # Preenche com a cor branca
     all_sprites.draw(window)
 
 
