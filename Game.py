@@ -84,7 +84,7 @@ def show_pontos():
 class Fumaca(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(fumaca_image, (200, 180))
+        self.image = pygame.transform.scale(fumaca_image, (70, 70))
         self.rect = self.image.get_rect()
         self.rect.x = (WIDTH//4)-60
         self.rect.y = player.rect.centery
