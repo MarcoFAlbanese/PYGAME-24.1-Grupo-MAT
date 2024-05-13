@@ -15,6 +15,7 @@ pygame.display.set_caption('Passeio de Jetpack')
 player_image = pygame.image.load('assets/player.png').convert_alpha()
 obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
 coin_image = pygame.image.load('assets/moedas.png').convert_alpha()
+fumaca_image=pygame.image.load('assets/fumaca.png').convert_alpha()
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 # ----- Inicia estruturas de dados
@@ -43,6 +44,7 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
             self.speed_y = 0
 
 class Coin(pygame.sprite.Sprite):
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(coin_image, (60, 60))
@@ -50,10 +52,13 @@ class Coin(pygame.sprite.Sprite):
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,HEIGHT - self.rect.height)
         self.speed_x = -3
+
     def update(self):
         self.rect.x += self.speed_x
+
 pontos = 0
 coins = pygame.sprite.Group()
+
 def mais_coins():
     if random.randrange(100)< 2:
         coin = Coin()
@@ -76,6 +81,17 @@ def show_pontos():
     texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(WIDTH/2,20))
 
+class Fumaca(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(fumaca_image, (60, 60))
+        self.rect = self.image.get_rect()
+        self.rect.x = (WIDTH//4)-60
+        self.rect.y = player.rect.centery
+        self.speed_y = 8
+
+    def update(self):
+        self.rect.y += self.speed_y
 
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
@@ -97,7 +113,7 @@ def distancia (sprite1,sprite2):
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
 obstaculos = pygame.sprite.Group()
-
+fumaca = pygame.sprite.Group()
 
 #adiciona o player na lista de sprites
 player = Player()
@@ -128,6 +144,15 @@ while game:
         
     if space_pressed == True:
         player.speed_y = -8
+        nova_fumaca = Fumaca()
+        all_sprites.add(nova_fumaca)
+        fumaca.add(nova_fumaca)
+
+    for f in fumaca:
+        f.update()
+        if f.rect.right < 0:
+            f.kill()
+
     
     
     if random.randrange(100)< 2:
@@ -137,9 +162,11 @@ while game:
 
         if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
             obstaculo.kill()
+
     mais_coins()
     atualiza_coins()
     all_sprites.update()
+
     hits = pygame.sprite.spritecollide(player, obstaculos, False)
     if hits:
         game = False
