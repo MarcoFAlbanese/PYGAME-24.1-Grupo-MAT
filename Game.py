@@ -13,6 +13,7 @@ HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
 player_image = pygame.image.load('assets/player.png').convert_alpha()
+player_mask = pygame.mask.from_surface(player_image)
 obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
 coin_image = pygame.image.load('assets/moedas.png').convert_alpha()
 fumaca_image=pygame.image.load('assets/fumaca.png').convert_alpha()
@@ -96,7 +97,7 @@ class Fumaca(pygame.sprite.Sprite):
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(obstaculo_image, (70, 50))
+        self.image = pygame.transform.scale(obstaculo_image, (100, 60))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
@@ -127,7 +128,7 @@ space_pressed = False
 def tela_inicio():
     window.fill((0,0,0))
     fonte = pygame.font.Font(None, 50)
-    texto = fonte.render("Pressione Espaço para jogar", True, (255,255,255))
+    texto = fonte.render("pressione espaço para jogar", True, (255,255,255))
     window.blit(texto, (WIDTH// 4, HEIGHT// 2))
     pygame.display.flip()
 
@@ -141,6 +142,8 @@ while not game:
                 game =  True
 # ===== Loop principal =====
 game = True
+obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
+
 while game:
     clock.tick(FPS)
 
@@ -158,7 +161,7 @@ while game:
                 space_pressed = False
         
     if space_pressed == True:
-        player.speed_y = -8
+        player.speed_y = -10
         nova_fumaca = Fumaca()
         all_sprites.add(nova_fumaca)
         fumaca.add(nova_fumaca)
@@ -167,7 +170,6 @@ while game:
         f.update()
         if f.rect.right < 0:
             f.kill()
-
     
     
     if random.randrange(100)< 2:
@@ -182,10 +184,14 @@ while game:
     atualiza_coins()
     all_sprites.update()
 
-    hits = pygame.sprite.spritecollide(player, obstaculos, False)
-    if hits:
-        game = False
-    
+    for obstaculo in obstaculos:
+        obstaculo.update()
+
+        obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
+
+        if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask):
+            game = False 
+
     # Atualiza a posição do background
     bg_x -= 3  # Velocidade de rolagem do background
     if bg_x <= -WIDTH:
