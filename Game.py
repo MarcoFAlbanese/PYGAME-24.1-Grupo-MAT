@@ -45,7 +45,7 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(coin_image, (50, 50))
+        self.image = pygame.transform.scale(coin_image, (60, 60))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,HEIGHT - self.rect.height)
@@ -72,9 +72,9 @@ def aumenta_pontos():
     pontos +=1
 
 def show_pontos():
-    fonte = pygame.font.Font(None, 36)
+    fonte = pygame.font.Font(None, 50)
     texto = fonte.render(str(pontos), True,(255,255,255))
-    window.blit(texto,(10,10))
+    window.blit(texto,(WIDTH/2,20))
 
 
 
