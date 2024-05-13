@@ -41,6 +41,38 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
             self.rect.bottom = HEIGHT
             self.speed_y = 0
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((30,30))
+        self.image.fill((255,215,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = random.randint(30,HEIGHT - self.rect.height)
+    def update(self):
+        self.rect.x += self.speed_x
+pontos = 0
+coins = pygame.sprite.Group()
+def mais_coins():
+    if random.randrange(100)< 3:
+        coin = Coin()
+        all_sprites.add(coin)
+        coins.add(coin)
+def atualiza_coins():
+    for coin in coins:
+        coin.update()
+        if pygame.sprite.collide_rect(player,coin):
+            coin.kill()
+            aumenta_pontos()
+def aumenta_pontos():
+    global pontos
+    pontos +=1
+def show_pontos():
+    fonte = pygame.font.Font(None, 36)
+    texto = fonte.render(pontos, True,(0,0,0))
+    window.blit(texto,(10,10))
+
+
 
 
 
@@ -97,6 +129,7 @@ while game:
     if space_pressed == True:
         player.speed_y = -8
     
+    
     if random.randrange(100)< 3:
         obstaculo = Obstaculos()
         all_sprites.add(obstaculo)
@@ -104,7 +137,8 @@ while game:
 
         if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
             obstaculo.kill()
-
+    mais_coins()
+    atualiza_coins()
     all_sprites.update()
     hits = pygame.sprite.spritecollide(player, obstaculos, False)
     if hits:
@@ -120,6 +154,7 @@ while game:
     window.blit(background, (bg_x, 0))
     window.blit(background, (bg_x + WIDTH, 0))
     all_sprites.draw(window)
+    show_pontos()
 
 
 
