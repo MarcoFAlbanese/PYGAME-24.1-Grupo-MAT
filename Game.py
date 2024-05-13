@@ -137,7 +137,8 @@ def tela_final():
     window.fill((0,0,0))
     fonte = pygame.font.Font(None, 40)
     texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (255,255,255))
-    window.blit(texto, (WIDTH// 4, HEIGHT// 2))
+    texto_rect = texto.get_rect(center=(WIDTH//2,HEIGHT//2))
+    window.blit(texto,texto_rect)
     pygame.display.flip()
 
 tela_inicio()
