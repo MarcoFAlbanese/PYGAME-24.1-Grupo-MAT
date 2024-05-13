@@ -19,6 +19,9 @@ coin_image = pygame.image.load('assets/moedas.png').convert_alpha()
 fumaca_image=pygame.image.load('assets/fumaca.png').convert_alpha()
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+background_inicio_final = pygame.image.load('assets/background2.png').convert_alpha()
+background_inicio_final = pygame.transform.scale(background_inicio_final, (WIDTH, HEIGHT))
+
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = False
@@ -101,7 +104,7 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
-        self.speed_x = -5
+        self.speed_x = -5* (1+(0.01*pontos))
        
     def update(self):
         self.rect.x += self.speed_x 
@@ -127,15 +130,17 @@ bg_x = 0  # Posição inicial do background
 space_pressed = False
 
 def tela_inicio():
-    window.fill((0,0,0))
+    window.fill((255, 255, 255))  # Preenche com a cor branca
+    window.blit(background_inicio_final,(0,0))
     fonte = pygame.font.Font(None, 50)
-    texto = fonte.render("pressione espaço para jogar", True, (255,255,255))
+    texto = fonte.render("pressione espaço para jogar", True, (255,230,230))
     window.blit(texto, (WIDTH// 4, HEIGHT// 2))
     pygame.display.flip()
 
 def tela_final():
-    window.fill((0,0,0))
-    fonte = pygame.font.Font(None, 40)
+    window.fill((255, 255, 255))  # Preenche com a cor branca
+    window.blit(background_inicio_final,(0,0))
+    fonte = pygame.font.Font(None, 50)
     texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (255,255,255))
     texto_rect = texto.get_rect(center=(WIDTH//2,HEIGHT//2))
     window.blit(texto,texto_rect)
@@ -146,7 +151,7 @@ tela_inicio()
 while not game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game = True
+            pygame.quit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 game =  True
