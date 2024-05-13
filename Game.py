@@ -77,10 +77,6 @@ def show_pontos():
     window.blit(texto,(WIDTH/2,20))
 
 
-
-
-
-
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -134,7 +130,7 @@ while game:
         player.speed_y = -8
     
     
-    if random.randrange(100)< 3:
+    if random.randrange(100)< 2:
         obstaculo = Obstaculos()
         all_sprites.add(obstaculo)
         obstaculos.add(obstaculo)
