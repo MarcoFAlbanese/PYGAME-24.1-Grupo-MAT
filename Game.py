@@ -97,7 +97,7 @@ class Fumaca(pygame.sprite.Sprite):
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(obstaculo_image, (100, 60))
+        self.image = pygame.transform.scale(obstaculo_image, (120,80))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
@@ -191,6 +191,9 @@ while game:
 
         if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask):
             game = False 
+
+        if obstaculo.rect.right < 0:
+            obstaculo.kill()
 
     # Atualiza a posição do background
     bg_x -= 3  # Velocidade de rolagem do background
