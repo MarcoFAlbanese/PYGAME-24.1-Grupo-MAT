@@ -132,16 +132,17 @@ space_pressed = False
 def tela_inicio():
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
-    fonte = pygame.font.Font(None, 50)
-    texto = fonte.render("pressione espaço para jogar", True, (255,230,230))
-    window.blit(texto, (WIDTH// 4, HEIGHT// 2))
+    fonte = pygame.font.SysFont("Menlo", 30)
+    texto = fonte.render("pressione espaço para jogar", True, (200,255,70))
+    texto_rect = texto.get_rect(center=(WIDTH//2, HEIGHT//2))
+    window.blit(texto, texto_rect)
     pygame.display.flip()
 
 def tela_final():
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
-    fonte = pygame.font.Font(None, 50)
-    texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (255,255,255))
+    fonte = pygame.font.SysFont("Menlo", 30)
+    texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (200,255,70))
     texto_rect = texto.get_rect(center=(WIDTH//2,HEIGHT//2))
     window.blit(texto,texto_rect)
     pygame.display.flip()
