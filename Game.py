@@ -20,7 +20,7 @@ background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
-game = True
+game = False
 
 class Player (pygame.sprite.Sprite):  ### classe personagem
     def __init__(self):
@@ -84,7 +84,7 @@ def show_pontos():
 class Fumaca(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(fumaca_image, (70, 70))
+        self.image = pygame.transform.scale(fumaca_image, (60, 60))
         self.rect = self.image.get_rect()
         self.rect.x = (WIDTH//4)-60
         self.rect.y = player.rect.centery
@@ -96,7 +96,7 @@ class Fumaca(pygame.sprite.Sprite):
 class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(obstaculo_image, (150, 120))
+        self.image = pygame.transform.scale(obstaculo_image, (70, 50))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
@@ -124,8 +124,23 @@ clock = pygame.time.Clock()
 FPS = 60 
 bg_x = 0  # Posição inicial do background
 space_pressed = False
+def tela_inicio():
+    window.fill((0,0,0))
+    fonte = pygame.font.Font(None, 50)
+    texto = fonte.render("Pressione Espaço para jogar", True, (255,255,255))
+    window.blit(texto, (WIDTH// 4, HEIGHT// 2))
+    pygame.display.flip()
 
+tela_inicio()
+while not game:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                game =  True
 # ===== Loop principal =====
+game = True
 while game:
     clock.tick(FPS)
 
