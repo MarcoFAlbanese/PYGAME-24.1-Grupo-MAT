@@ -5,7 +5,7 @@ import random
 import math
 
 pygame.init()
-
+pygame.mixer.init()
 
 # ----- Gera tela principal
 WIDTH = 1000
@@ -21,6 +21,7 @@ background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 background_inicio_final = pygame.image.load('assets/background2.png').convert_alpha()
 background_inicio_final = pygame.transform.scale(background_inicio_final, (WIDTH, HEIGHT))
+music = pygame.mixer.music.load('assets/musica_de_fundo.ogg')
 
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
@@ -162,6 +163,8 @@ game_over = False
 obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
 
 while not game_over:
+
+    pygame.mixer.music.play(-1)
 
     while game:
         clock.tick(FPS)
