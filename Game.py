@@ -49,6 +49,7 @@ class Coin(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,HEIGHT - self.rect.height)
+        self.speed_x = -5
     def update(self):
         self.rect.x += self.speed_x
 pontos = 0
@@ -58,18 +59,21 @@ def mais_coins():
         coin = Coin()
         all_sprites.add(coin)
         coins.add(coin)
+
 def atualiza_coins():
     for coin in coins:
         coin.update()
         if pygame.sprite.collide_rect(player,coin):
             coin.kill()
             aumenta_pontos()
+
 def aumenta_pontos():
     global pontos
     pontos +=1
+
 def show_pontos():
     fonte = pygame.font.Font(None, 36)
-    texto = fonte.render(pontos, True,(0,0,0))
+    texto = fonte.render(str(pontos), True,(0,0,0))
     window.blit(texto,(10,10))
 
 
