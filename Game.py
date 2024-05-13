@@ -14,6 +14,8 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
 player_image = pygame.image.load('assets/player.png').convert_alpha()
 obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
+background = pygame.image.load('assets/background.png')
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = True
@@ -71,8 +73,8 @@ all_sprites.add(player)
 
 
 clock = pygame.time.Clock()
-FPS = 50
-
+FPS = 60 
+bg_x = 0  # Posição inicial do background
 space_pressed = False
 
 # ===== Loop principal =====
@@ -107,10 +109,16 @@ while game:
     hits = pygame.sprite.spritecollide(player, obstaculos, False)
     if hits:
         game = False
-
+    
+    # Atualiza a posição do background
+    bg_x -= 3  # Velocidade de rolagem do background
+    if bg_x <= -WIDTH:
+        bg_x = 0
 
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
+    window.blit(background, (bg_x, 0))
+    window.blit(background, (bg_x + WIDTH, 0))
     all_sprites.draw(window)
 
 
