@@ -125,6 +125,7 @@ clock = pygame.time.Clock()
 FPS = 60 
 bg_x = 0  # Posição inicial do background
 space_pressed = False
+
 def tela_inicio():
     window.fill((0,0,0))
     fonte = pygame.font.Font(None, 50)
@@ -132,7 +133,15 @@ def tela_inicio():
     window.blit(texto, (WIDTH// 4, HEIGHT// 2))
     pygame.display.flip()
 
+def tela_final():
+    window.fill((0,0,0))
+    fonte = pygame.font.Font(None, 40)
+    texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (255,255,255))
+    window.blit(texto, (WIDTH// 4, HEIGHT// 2))
+    pygame.display.flip()
+
 tela_inicio()
+
 while not game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -142,75 +151,91 @@ while not game:
                 game =  True
 # ===== Loop principal =====
 game = True
+game_over = False
 obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
 
-while game:
-    clock.tick(FPS)
+while not game_over:
 
-    # ----- Trata eventos
-    for event in pygame.event.get():
-        # ----- Verifica consequências
-        if event.type == pygame.QUIT:
-            game = False
+    while game:
+        clock.tick(FPS)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                space_pressed = True
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_SPACE:
-                space_pressed = False
+        # ----- Trata eventos
+        for event in pygame.event.get():
+            # ----- Verifica consequências
+            if event.type == pygame.QUIT:
+                game = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    space_pressed = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    space_pressed = False
+            
+        if space_pressed == True:
+            player.speed_y = -10
+            nova_fumaca = Fumaca()
+            all_sprites.add(nova_fumaca)
+            fumaca.add(nova_fumaca)
+
+        for f in fumaca:
+            f.update()
+            if f.rect.right < 0:
+                f.kill()
         
-    if space_pressed == True:
-        player.speed_y = -10
-        nova_fumaca = Fumaca()
-        all_sprites.add(nova_fumaca)
-        fumaca.add(nova_fumaca)
+        
+        if random.randrange(100)< 2:
+            obstaculo = Obstaculos()
+            all_sprites.add(obstaculo)
+            obstaculos.add(obstaculo)
 
-    for f in fumaca:
-        f.update()
-        if f.rect.right < 0:
-            f.kill()
-    
-    
-    if random.randrange(100)< 2:
-        obstaculo = Obstaculos()
-        all_sprites.add(obstaculo)
-        obstaculos.add(obstaculo)
+            if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
+                obstaculo.kill()
 
-        if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
-            obstaculo.kill()
+        mais_coins()
+        atualiza_coins()
+        all_sprites.update()
 
-    mais_coins()
-    atualiza_coins()
-    all_sprites.update()
+        for obstaculo in obstaculos:
+            obstaculo.update()
 
-    for obstaculo in obstaculos:
-        obstaculo.update()
+            obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
 
-        obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
+            if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask):
+                game = False 
 
-        if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask):
-            game = False 
+            if obstaculo.rect.right < 0:
+                obstaculo.kill()
 
-        if obstaculo.rect.right < 0:
-            obstaculo.kill()
+        # Atualiza a posição do background
+        bg_x -= 3  # Velocidade de rolagem do background
+        if bg_x <= -WIDTH:
+            bg_x = 0
 
-    # Atualiza a posição do background
-    bg_x -= 3  # Velocidade de rolagem do background
-    if bg_x <= -WIDTH:
-        bg_x = 0
+        # ----- Gera saídas
+        window.fill((255, 255, 255))  # Preenche com a cor branca
+        window.blit(background, (bg_x, 0))
+        window.blit(background, (bg_x + WIDTH, 0))
+        all_sprites.draw(window)
+        show_pontos()
 
-    # ----- Gera saídas
-    window.fill((255, 255, 255))  # Preenche com a cor branca
-    window.blit(background, (bg_x, 0))
-    window.blit(background, (bg_x + WIDTH, 0))
-    all_sprites.draw(window)
-    show_pontos()
+        # ----- Atualiza estado do jogo
+        pygame.display.update()  # Mostra o novo frame para o jogador
 
-
-
-    # ----- Atualiza estado do jogo
-    pygame.display.update()  # Mostra o novo frame para o jogador
-
-# ===== Finalização =====
-pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
+    tela_final()
+        
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_y:
+                game =  True
+                pontos = 0
+                player.rect.centerx = WIDTH//4
+                player.rect.centery = HEIGHT//2
+                for sprite in all_sprites.copy():
+                    if sprite != player:
+                        sprite.kill()
+            elif event.key == pygame.K_n:
+                pygame.quit()
+        
+        elif event.type == pygame.QUIT:
+            pygame.quit
