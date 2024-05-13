@@ -82,7 +82,7 @@ def show_pontos():
     texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(WIDTH/2,20))
 
-class Fumaca(pygame.sprite.Sprite):
+class Fumaca(pygame.sprite.Sprite): ### classe para fumaça da jetpack
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(fumaca_image, (60, 60))
