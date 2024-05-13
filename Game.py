@@ -14,6 +14,7 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
 player_image = pygame.image.load('assets/player.png').convert_alpha()
 obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
+coin_image = pygame.image.load('assets/moedas.png').convert_alpha()
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 # ----- Inicia estruturas de dados
@@ -44,18 +45,17 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30,30))
-        self.image.fill((255,215,0))
+        self.image = pygame.transform.scale(coin_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,HEIGHT - self.rect.height)
-        self.speed_x = -5
+        self.speed_x = -3
     def update(self):
         self.rect.x += self.speed_x
 pontos = 0
 coins = pygame.sprite.Group()
 def mais_coins():
-    if random.randrange(100)< 3:
+    if random.randrange(100)< 2:
         coin = Coin()
         all_sprites.add(coin)
         coins.add(coin)
@@ -73,7 +73,7 @@ def aumenta_pontos():
 
 def show_pontos():
     fonte = pygame.font.Font(None, 36)
-    texto = fonte.render(str(pontos), True,(0,0,0))
+    texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(10,10))
 
 
