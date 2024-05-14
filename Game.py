@@ -22,6 +22,7 @@ background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 background_inicio_final = pygame.image.load('assets/background2.png').convert_alpha()
 background_inicio_final = pygame.transform.scale(background_inicio_final, (WIDTH, HEIGHT))
 music = pygame.mixer.music.load('assets/musica_de_fundo.ogg')
+moedas = pygame.mixer.Sound('assets/moedas_sfx.ogg')
 
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
@@ -80,6 +81,7 @@ def atualiza_coins():
 def aumenta_pontos():
     global pontos
     pontos +=1
+    pygame.mixer.Sound.play(moedas)
 
 def show_pontos():
     fonte = pygame.font.Font(None, 50)
