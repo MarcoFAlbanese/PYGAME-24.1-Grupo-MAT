@@ -49,7 +49,7 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
             self.rect.bottom = HEIGHT
             self.speed_y = 0
 
-class Coin(pygame.sprite.Sprite):
+class Coin(pygame.sprite.Sprite): ### classe sistema de pontuação
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -65,25 +65,25 @@ class Coin(pygame.sprite.Sprite):
 pontos = 0
 coins = pygame.sprite.Group()
 
-def mais_coins():
+def mais_coins(): ## aparece mais coins
     if random.randrange(100)< 2:
         coin = Coin()
         all_sprites.add(coin)
         coins.add(coin)
 
-def atualiza_coins():
+def atualiza_coins(): ## atualiza pontuação
     for coin in coins:
         coin.update()
         if pygame.sprite.collide_rect(player,coin):
             coin.kill()
             aumenta_pontos()
 
-def aumenta_pontos():
+def aumenta_pontos(): ## aumenta a pontuação
     global pontos
     pontos +=1
     pygame.mixer.Sound.play(moedas)
 
-def show_pontos():
+def show_pontos(): ## mostra pontuação
     fonte = pygame.font.Font(None, 50)
     texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(WIDTH/2,20))
@@ -132,6 +132,7 @@ FPS = 60
 bg_x = 0  # Posição inicial do background
 space_pressed = False
 
+#### Função da tela de inicio
 def tela_inicio():
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
@@ -145,6 +146,7 @@ def tela_inicio():
     window.blit(texto2, texto2_rect)
     pygame.display.flip()
 
+#### Função tela final
 def tela_final():
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
@@ -154,8 +156,9 @@ def tela_final():
     window.blit(texto,texto_rect)
     pygame.display.flip()
 
-tela_inicio()
+tela_inicio() #inicia tela de inicio
 
+# ==== Loop tela inicial =====
 while not game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -167,7 +170,7 @@ while not game:
 game = True
 game_over = False
 obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
-
+# ==== Loop do jogo =====
 while not game_over:
 
     pygame.mixer.music.play(-1)
@@ -212,12 +215,12 @@ while not game_over:
         atualiza_coins()
         all_sprites.update()
 
-        for obstaculo in obstaculos:
+        for obstaculo in obstaculos: ## gera obstaculos
             obstaculo.update()
 
             obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
 
-            if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask):
+            if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask): ## forma de perder
                 game = False 
 
             if obstaculo.rect.right < 0:
@@ -238,11 +241,11 @@ while not game_over:
         # ----- Atualiza estado do jogo
         pygame.display.update()  # Mostra o novo frame para o jogador
 
-    tela_final()
+    tela_final() ## inicia tela final
         
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_y:
+            if event.key == pygame.K_y: ## reinicia o jogo
                 game =  True
                 pontos = 0
                 player.rect.centerx = WIDTH//4
@@ -250,8 +253,11 @@ while not game_over:
                 for sprite in all_sprites.copy():
                     if sprite != player:
                         sprite.kill()
-            elif event.key == pygame.K_n:
+            elif event.key == pygame.K_n: ## fecha o jogo
                 pygame.quit()
         
         elif event.type == pygame.QUIT:
             pygame.quit
+
+
+
