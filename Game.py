@@ -139,6 +139,10 @@ def tela_inicio():
     texto = fonte.render("pressione espaço para jogar", True, (200,255,70))
     texto_rect = texto.get_rect(center=(WIDTH//2, HEIGHT//2))
     window.blit(texto, texto_rect)
+    fonte = pygame.font.SysFont("Menlo", 40)
+    texto2 = fonte.render("bem-vindo(a) a um passeio de jetpack!", True, (200,255,70))
+    texto2_rect = texto.get_rect(center=(WIDTH//2-190, HEIGHT//4))
+    window.blit(texto2, texto2_rect)
     pygame.display.flip()
 
 def tela_final():
