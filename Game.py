@@ -22,7 +22,10 @@ background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 background_inicio_final = pygame.image.load('assets/background2.png').convert_alpha()
 background_inicio_final = pygame.transform.scale(background_inicio_final, (WIDTH, HEIGHT))
 music = pygame.mixer.music.load('assets/musica_de_fundo.ogg')
+pygame.mixer.music.set_volume(0.5)
 moedas = pygame.mixer.Sound('assets/moedas_sfx.ogg')
+moedas.set_volume(0.5)
+lapis = pygame.mixer.Sound('assets/som_lapis.ogg')
 
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
@@ -187,15 +190,21 @@ while not game_over:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     space_pressed = True
+                    lapis.play(
+
+                    )
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     space_pressed = False
+                    lapis.stop()
             
         if space_pressed == True:
             player.speed_y = -10
             nova_fumaca = Fumaca()
             all_sprites.add(nova_fumaca)
             fumaca.add(nova_fumaca)
+
+
 
         for f in fumaca:
             f.update()
