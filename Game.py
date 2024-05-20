@@ -4,6 +4,8 @@ import pygame
 import random
 import math
 
+from pygame.sprite import Group
+
 pygame.init()
 pygame.mixer.init()
 
@@ -30,6 +32,8 @@ lapis = pygame.mixer.Sound('assets/som_lapis.ogg')
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = False
+powerup_timer = 0
+powerup_intervalo = 600
 
 class Player (pygame.sprite.Sprite):  ### classe personagem
     def __init__(self):
@@ -39,6 +43,8 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
         self.rect.centerx = WIDTH//4
         self.rect.centery = HEIGHT//2
         self.speed_y = 0
+        self.intangivel = False
+        self.intangivel_timer = 0
     
     def update(self):
         self.speed_y +=1
@@ -51,6 +57,14 @@ class Player (pygame.sprite.Sprite):  ### classe personagem
         if self.rect.bottom >= HEIGHT:
             self.rect.bottom = HEIGHT
             self.speed_y = 0
+
+        #atualiza tempo de intangivel
+        if self.intangivel:
+            self.intangivel_timer -= 1
+            if self.intangivel_timer <=0:
+                self.intangivel = False
+
+
 
 class Coin(pygame.sprite.Sprite): ### classe sistema de pontuação
 
@@ -120,10 +134,66 @@ def distancia (sprite1,sprite2):
     centro2 = sprite2.rect.center
     return (math.sqrt((centro1[0] - centro2[0]) ** 2 + (centro1[1] - centro2[1]) ** 2))
 
+class Powerup (pygame.sprite.Sprite): ## classe dos poderes do jogo
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(image,(60,60))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = random.randint(30, HEIGHT - self.rect.height)
+        self.speed_x = -3
+
+    def update(self):
+        self.rect.x += self.speed_x
+
+class Intangivel(Powerup): ## poder de ficar imortal
+    def __init__(self):
+        super().__init__(pygame.image.load('assets/intangibilidade.png').convert_alpha())
+    def aplica_poder(self,player):
+        player.intangivel = True
+        player.intangivel_timer = 300 #5 segundos
+
+class ReduzVelo (Powerup): ## poder de diminuir a velocidade do jogo
+    def __init__(self):
+        super().__init__(pygame.image.load('assets/reduzvelo.png').convert_alpha())
+    def aplica_poder (self,obstaculos):
+        for obstaculo in obstaculos:
+            obstaculo.speed_x *= 0.5
+
+def mais_poder(): ## Adiciona powerups
+    global powerup_timer
+    if len(powerups) == 0 and powerup_timer<=0:
+        if pontos % 30 == 0 and pontos != 0:
+            powerup = Intangivel()
+        elif pontos % 15 == 0 and pontos!= 0:
+            powerup = ReduzVelo()
+        else:
+            return
+        all_sprites.add(powerup)
+        powerups.add(powerup)
+        powerup_timer = powerup_intervalo
+
+
+def atualiza_poder():
+    global powerup_timer
+    for powerup in powerups:
+        powerup.update()
+        if pygame.sprite.collide_rect(player, powerup):
+            if isinstance(powerup, Intangivel):
+                powerup.aplica_poder(player)
+            elif isinstance(powerup, ReduzVelo):
+                powerup.aplica_poder(obstaculos)
+            powerup.kill()
+    if powerup_timer>0:
+        powerup_timer-=1
+
+
 #lista com todos sprites
 all_sprites = pygame.sprite.Group()
 obstaculos = pygame.sprite.Group()
 fumaca = pygame.sprite.Group()
+powerups = pygame.sprite.Group()
+
 
 #adiciona o player na lista de sprites
 player = Player()
@@ -131,7 +201,7 @@ all_sprites.add(player)
 
 
 clock = pygame.time.Clock()
-FPS = 60 
+FPS = 60
 bg_x = 0  # Posição inicial do background
 space_pressed = False
 
@@ -190,9 +260,8 @@ while not game_over:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     space_pressed = True
-                    lapis.play(
+                    lapis.play()
 
-                    )
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     space_pressed = False
@@ -222,6 +291,8 @@ while not game_over:
 
         mais_coins()
         atualiza_coins()
+        mais_poder()
+        atualiza_poder()
         all_sprites.update()
 
         for obstaculo in obstaculos: ## gera obstaculos
