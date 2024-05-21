@@ -71,7 +71,10 @@ def tela_final():
     window.blit(background_inicio_final,(0,0))
     fonte = pygame.font.SysFont("Menlo", 30)
     texto = fonte.render("Fim de jogo. Você deseja jogar novamente? (Y/N)", True, (200,255,70))
+    texto_pontuacao = fonte.render("Pontuação: " + str(pontuacao_alcançada), True, (200,255,70))
+    texto_pontuacao_rect = texto_pontuacao.get_rect(center=(WIDTH//2, HEIGHT//2 + 50))
     texto_rect = texto.get_rect(center=(WIDTH//2,HEIGHT//2))
+    window.blit(texto_pontuacao, texto_pontuacao_rect)
     window.blit(texto,texto_rect)
     pygame.display.flip()
 
@@ -147,6 +150,7 @@ while not game_over:
             obstaculo_mask = pygame.mask.from_surface(assets['obstaculo_image'])
 
             if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask): ## forma de perder
+                pontuacao_alcançada = pontos
                 game = False 
 
             if obstaculo.rect.right < 0:
