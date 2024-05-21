@@ -5,7 +5,7 @@ import random
 import math
 from pygame.sprite import Group
 from Assets import load_assets
-from Sprites import Player,Coin,Fumaca,Obstaculos
+from Sprites import Player,Coin,Fumaca,Obstaculos,Powerup,Intangivel,ReduzVelo
 
 pygame.init()
 pygame.mixer.init()
@@ -17,16 +17,12 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
 
 
-
-
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = False
 powerup_timer = 0
 powerup_intervalo = 600
 assets = load_assets()
-
-
 
 pontos = 0
 coins = pygame.sprite.Group()
@@ -54,40 +50,13 @@ def show_pontos(): ## mostra pontuação
     texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(WIDTH/2,20))
 
-
-
-
-        
+  
 def distancia (sprite1,sprite2):
     centro1 = sprite1.rect.center
     centro2 = sprite2.rect.center
     return (math.sqrt((centro1[0] - centro2[0]) ** 2 + (centro1[1] - centro2[1]) ** 2))
 
-class Powerup (pygame.sprite.Sprite): ## classe dos poderes do jogo
-    def __init__(self, image):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(image,(60,60))
-        self.rect = self.image.get_rect()
-        self.rect.x = WIDTH
-        self.rect.y = random.randint(30, HEIGHT - self.rect.height)
-        self.speed_x = -3
 
-    def update(self):
-        self.rect.x += self.speed_x
-
-class Intangivel(Powerup): ## poder de ficar imortal
-    def __init__(self):
-        super().__init__(pygame.image.load('assets/intangibilidade.png').convert_alpha())
-    def aplica_poder(self,player):
-        player.intangivel = True
-        player.intangivel_timer = 300 #5 segundos
-
-class ReduzVelo (Powerup): ## poder de diminuir a velocidade do jogo
-    def __init__(self):
-        super().__init__(pygame.image.load('assets/reduzvelo.png').convert_alpha())
-    def aplica_poder (self,obstaculos):
-        for obstaculo in obstaculos:
-            obstaculo.speed_x *= 0.5
 
 def mais_poder(): ## Adiciona powerups
     global powerup_timer

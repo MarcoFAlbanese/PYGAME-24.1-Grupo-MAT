@@ -2,8 +2,6 @@ import pygame
 import random
 from Assets import load_assets
 
-
-
 WIDTH = 1000
 HEIGHT = 650
 
@@ -76,3 +74,29 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
        
     def update(self):
         self.rect.x += self.speed_x 
+
+class Powerup (pygame.sprite.Sprite): ## classe dos poderes do jogo
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(image,(60,60))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = random.randint(30, HEIGHT - self.rect.height)
+        self.speed_x = -3
+
+    def update(self):
+        self.rect.x += self.speed_x
+
+class Intangivel(Powerup): ## poder de ficar imortal
+    def __init__(self):
+        super().__init__(pygame.image.load('assets/intangibilidade.png').convert_alpha())
+    def aplica_poder(self,player):
+        player.intangivel = True
+        player.intangivel_timer = 300 #5 segundos
+
+class ReduzVelo (Powerup): ## poder de diminuir a velocidade do jogo
+    def __init__(self):
+        super().__init__(pygame.image.load('assets/reduzvelo.png').convert_alpha())
+    def aplica_poder (self,obstaculos):
+        for obstaculo in obstaculos:
+            obstaculo.speed_x *= 0.5
