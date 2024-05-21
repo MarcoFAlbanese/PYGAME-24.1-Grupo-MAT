@@ -3,8 +3,9 @@
 import pygame
 import random
 import math
-
 from pygame.sprite import Group
+from Assets import load_assets
+from Sprites import Player,Coin,Fumaca,Obstaculos
 
 pygame.init()
 pygame.mixer.init()
@@ -14,77 +15,25 @@ WIDTH = 1000
 HEIGHT = 650
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Passeio de Jetpack')
-player_image = pygame.image.load('assets/player.png').convert_alpha()
-player_mask = pygame.mask.from_surface(player_image)
-obstaculo_image = pygame.image.load('assets/bala.png').convert_alpha()
-coin_image = pygame.image.load('assets/moedas.png').convert_alpha()
-fumaca_image=pygame.image.load('assets/fumaca.png').convert_alpha()
-background = pygame.image.load('assets/background.png')
-background = pygame.transform.scale(background, (WIDTH, HEIGHT))
-background_inicio_final = pygame.image.load('assets/background2.png').convert_alpha()
-background_inicio_final = pygame.transform.scale(background_inicio_final, (WIDTH, HEIGHT))
-music = pygame.mixer.music.load('assets/musica_de_fundo.ogg')
-pygame.mixer.music.set_volume(0.5)
-moedas = pygame.mixer.Sound('assets/moedas_sfx.ogg')
-moedas.set_volume(0.5)
-lapis = pygame.mixer.Sound('assets/som_lapis.ogg')
+
+
+
 
 # ----- Inicia estruturas de dados
 BLACK = (0,0,0)
 game = False
 powerup_timer = 0
 powerup_intervalo = 600
-
-class Player (pygame.sprite.Sprite):  ### classe personagem
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(player_image, (85, 85))
-        self.rect = self.image.get_rect()
-        self.rect.centerx = WIDTH//4
-        self.rect.centery = HEIGHT//2
-        self.speed_y = 0
-        self.intangivel = False
-        self.intangivel_timer = 0
-    
-    def update(self):
-        self.speed_y +=1
-        self.rect.y += self.speed_y
-
-        if self.rect.top <= 0:
-            self.rect.top = 0
-            self.speed_y = 0
-
-        if self.rect.bottom >= HEIGHT:
-            self.rect.bottom = HEIGHT
-            self.speed_y = 0
-
-        #atualiza tempo de intangivel
-        if self.intangivel:
-            self.intangivel_timer -= 1
-            if self.intangivel_timer <=0:
-                self.intangivel = False
+assets = load_assets()
 
 
-
-class Coin(pygame.sprite.Sprite): ### classe sistema de pontuação
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(coin_image, (60, 60))
-        self.rect = self.image.get_rect()
-        self.rect.x = WIDTH
-        self.rect.y = random.randint(30,HEIGHT - self.rect.height)
-        self.speed_x = -3
-
-    def update(self):
-        self.rect.x += self.speed_x
 
 pontos = 0
 coins = pygame.sprite.Group()
 
 def mais_coins(): ## aparece mais coins
     if random.randrange(100)< 2:
-        coin = Coin()
+        coin = Coin(assets)
         all_sprites.add(coin)
         coins.add(coin)
 
@@ -98,36 +47,16 @@ def atualiza_coins(): ## atualiza pontuação
 def aumenta_pontos(): ## aumenta a pontuação
     global pontos
     pontos +=1
-    pygame.mixer.Sound.play(moedas)
+    pygame.mixer.Sound.play(assets['moedas_sound'])
 
 def show_pontos(): ## mostra pontuação
     fonte = pygame.font.Font(None, 50)
     texto = fonte.render(str(pontos), True,(255,255,255))
     window.blit(texto,(WIDTH/2,20))
 
-class Fumaca(pygame.sprite.Sprite): ### classe para fumaça da jetpack
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(fumaca_image, (60, 60))
-        self.rect = self.image.get_rect()
-        self.rect.x = (WIDTH//4)-60
-        self.rect.y = player.rect.centery
-        self.speed_y = 8
 
-    def update(self):
-        self.rect.y += self.speed_y
 
-class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(obstaculo_image, (120,80))
-        self.rect = self.image.get_rect()
-        self.rect.x = WIDTH
-        self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
-        self.speed_x = -5* (1+(0.01*pontos))
-       
-    def update(self):
-        self.rect.x += self.speed_x 
+
         
 def distancia (sprite1,sprite2):
     centro1 = sprite1.rect.center
@@ -196,7 +125,7 @@ powerups = pygame.sprite.Group()
 
 
 #adiciona o player na lista de sprites
-player = Player()
+player = Player(assets)
 all_sprites.add(player)
 
 
@@ -207,6 +136,7 @@ space_pressed = False
 
 #### Função da tela de inicio
 def tela_inicio():
+    background_inicio_final = assets["background_inicio_final"]
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
     fonte = pygame.font.SysFont("Menlo", 30)
@@ -221,6 +151,7 @@ def tela_inicio():
 
 #### Função tela final
 def tela_final():
+    background_inicio_final = assets["background_inicio_final"]
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(background_inicio_final,(0,0))
     fonte = pygame.font.SysFont("Menlo", 30)
@@ -242,7 +173,7 @@ while not game:
 # ===== Loop principal =====
 game = True
 game_over = False
-obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
+obstaculo_mask = pygame.mask.from_surface(assets['obstaculo_image'])
 # ==== Loop do jogo =====
 while not game_over:
 
@@ -260,16 +191,16 @@ while not game_over:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     space_pressed = True
-                    lapis.play()
+                    assets['lapis_sound'].play()
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     space_pressed = False
-                    lapis.stop()
+                    assets['lapis_sound'].stop()
             
         if space_pressed == True:
             player.speed_y = -10
-            nova_fumaca = Fumaca()
+            nova_fumaca = Fumaca(assets,player)
             all_sprites.add(nova_fumaca)
             fumaca.add(nova_fumaca)
 
@@ -282,7 +213,7 @@ while not game_over:
         
         
         if random.randrange(100)< 2:
-            obstaculo = Obstaculos()
+            obstaculo = Obstaculos(assets,pontos)
             all_sprites.add(obstaculo)
             obstaculos.add(obstaculo)
 
@@ -298,7 +229,7 @@ while not game_over:
         for obstaculo in obstaculos: ## gera obstaculos
             obstaculo.update()
 
-            obstaculo_mask = pygame.mask.from_surface(obstaculo_image)
+            obstaculo_mask = pygame.mask.from_surface(assets['obstaculo_image'])
 
             if pygame.sprite.spritecollide(player,obstaculos,False,pygame.sprite.collide_mask): ## forma de perder
                 game = False 
@@ -313,8 +244,8 @@ while not game_over:
 
         # ----- Gera saídas
         window.fill((255, 255, 255))  # Preenche com a cor branca
-        window.blit(background, (bg_x, 0))
-        window.blit(background, (bg_x + WIDTH, 0))
+        window.blit(assets['background'], (bg_x, 0))
+        window.blit(assets['background'], (bg_x + WIDTH, 0))
         all_sprites.draw(window)
         show_pontos()
 
