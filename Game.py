@@ -6,6 +6,7 @@ import math
 from pygame.sprite import Group
 from Assets import load_assets
 from Sprites import Player,Coin,Fumaca,Obstaculos,Powerup,Intangivel,ReduzVelo
+from Funcoes import *
 
 pygame.init()
 pygame.mixer.init()
@@ -26,36 +27,6 @@ assets = load_assets()
 
 pontos = 0
 coins = pygame.sprite.Group()
-
-def mais_coins(): ## aparece mais coins
-    if random.randrange(100)< 2:
-        coin = Coin(assets)
-        all_sprites.add(coin)
-        coins.add(coin)
-
-def atualiza_coins(): ## atualiza pontuação
-    for coin in coins:
-        coin.update()
-        if pygame.sprite.collide_rect(player,coin):
-            coin.kill()
-            aumenta_pontos()
-
-def aumenta_pontos(): ## aumenta a pontuação
-    global pontos
-    pontos +=1
-    pygame.mixer.Sound.play(assets['moedas_sound'])
-
-def show_pontos(): ## mostra pontuação
-    fonte = pygame.font.Font(None, 50)
-    texto = fonte.render(str(pontos), True,(255,255,255))
-    window.blit(texto,(WIDTH/2,20))
-
-  
-def distancia (sprite1,sprite2):
-    centro1 = sprite1.rect.center
-    centro2 = sprite2.rect.center
-    return (math.sqrt((centro1[0] - centro2[0]) ** 2 + (centro1[1] - centro2[1]) ** 2))
-
 
 
 def mais_poder(): ## Adiciona powerups
@@ -189,8 +160,8 @@ while not game_over:
             if len(obstaculos) > 1 and (pygame.sprite.collide_rect(obstaculo, obstaculos.sprites()[-2]) or distancia(obstaculo, obstaculos.sprites()[-2]) < 200):
                 obstaculo.kill()
 
-        mais_coins()
-        atualiza_coins()
+        mais_coins(all_sprites, coins, assets)
+        pontos = atualiza_coins(player, coins, assets, pontos)
         mais_poder()
         atualiza_poder()
         all_sprites.update()
@@ -216,7 +187,7 @@ while not game_over:
         window.blit(assets['background'], (bg_x, 0))
         window.blit(assets['background'], (bg_x + WIDTH, 0))
         all_sprites.draw(window)
-        show_pontos()
+        show_pontos(window, pontos)
 
         # ----- Atualiza estado do jogo
         pygame.display.update()  # Mostra o novo frame para o jogador
