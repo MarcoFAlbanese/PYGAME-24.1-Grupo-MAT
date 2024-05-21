@@ -29,32 +29,7 @@ pontos = 0
 coins = pygame.sprite.Group()
 
 
-def mais_poder(): ## Adiciona powerups
-    global powerup_timer
-    if len(powerups) == 0 and powerup_timer<=0:
-        if pontos % 30 == 0 and pontos != 0:
-            powerup = Intangivel()
-        elif pontos % 15 == 0 and pontos!= 0:
-            powerup = ReduzVelo()
-        else:
-            return
-        all_sprites.add(powerup)
-        powerups.add(powerup)
-        powerup_timer = powerup_intervalo
 
-
-def atualiza_poder():
-    global powerup_timer
-    for powerup in powerups:
-        powerup.update()
-        if pygame.sprite.collide_rect(player, powerup):
-            if isinstance(powerup, Intangivel):
-                powerup.aplica_poder(player)
-            elif isinstance(powerup, ReduzVelo):
-                powerup.aplica_poder(obstaculos)
-            powerup.kill()
-    if powerup_timer>0:
-        powerup_timer-=1
 
 
 #lista com todos sprites
@@ -162,8 +137,8 @@ while not game_over:
 
         mais_coins(all_sprites, coins, assets)
         pontos = atualiza_coins(player, coins, assets, pontos)
-        mais_poder()
-        atualiza_poder()
+        mais_poder(all_sprites, powerups, pontos, powerup_timer, powerup_intervalo)
+        atualiza_poder(player, powerups, all_sprites, obstaculos, powerup_timer)
         all_sprites.update()
 
         for obstaculo in obstaculos: ## gera obstaculos

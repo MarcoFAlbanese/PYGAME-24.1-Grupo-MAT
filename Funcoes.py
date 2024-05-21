@@ -2,7 +2,8 @@ import pygame
 import random
 import math
 from Assets import load_assets
-from Sprites import Coin 
+from Sprites import Coin, Powerup,Intangivel,ReduzVelo
+
 
 WIDTH = 1000
 HEIGHT = 650
@@ -35,3 +36,28 @@ def distancia(sprite1, sprite2):
     centro1 = sprite1.rect.center
     centro2 = sprite2.rect.center
     return math.sqrt((centro1[0] - centro2[0]) ** 2 + (centro1[1] - centro2[1]) ** 2)
+
+
+def mais_poder(all_sprites, powerups, pontos, powerup_timer, powerup_intervalo):
+    if len(powerups) == 0 and powerup_timer <= 0:
+        if pontos % 30 == 0 and pontos != 0:
+            powerup = Intangivel()
+        elif pontos % 15 == 0 and pontos != 0:
+            powerup = ReduzVelo()
+        else:
+            return
+        all_sprites.add(powerup)
+        powerups.add(powerup)
+        powerup_timer = powerup_intervalo
+
+def atualiza_poder(player, powerups, all_sprites, obstaculos, powerup_timer):
+    for powerup in powerups:
+        powerup.update()
+        if pygame.sprite.collide_rect(player, powerup):
+            if isinstance(powerup, Intangivel):
+                powerup.aplica_poder(player)
+            elif isinstance(powerup, ReduzVelo):
+                powerup.aplica_poder(obstaculos)
+            powerup.kill()
+    if powerup_timer > 0:
+        powerup_timer -= 1
