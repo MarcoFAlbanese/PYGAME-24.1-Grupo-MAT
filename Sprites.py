@@ -70,7 +70,7 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
-        self.speed_x = -5* (1+(0.05*pontos))
+        self.speed_x = -5* (1+(0.025*pontos))
        
     def update(self):
         self.rect.x += self.speed_x 
@@ -92,7 +92,7 @@ class Intangivel(Powerup): ## poder de ficar imortal
         super().__init__(pygame.image.load('assets/intangibilidade.png').convert_alpha())
     def aplica_poder(self,player):
         player.intangivel = True
-        player.intangivel_timer = 300 #5 segundos
+        player.intangivel_timer = 750 #7.5 segundos
 
 class ReduzVelo (Powerup): ## poder de diminuir a velocidade do jogo
     def __init__(self):
