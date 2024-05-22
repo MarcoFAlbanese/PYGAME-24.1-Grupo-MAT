@@ -40,9 +40,9 @@ def distancia(sprite1, sprite2):
 
 def mais_poder(all_sprites, powerups, pontos, powerup_timer, powerup_intervalo):
     if len(powerups) == 0 and powerup_timer <= 0:
-        if pontos % 30 == 0 and pontos != 0:
+        if pontos % 25 == 0 and pontos != 0:
             powerup = Intangivel()
-        elif pontos % 15 == 0 and pontos != 0:
+        elif pontos % 10 == 0 and pontos != 0:
             powerup = ReduzVelo()
         else:
             return
