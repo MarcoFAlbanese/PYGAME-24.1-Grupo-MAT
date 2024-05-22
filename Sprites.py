@@ -70,7 +70,7 @@ class Obstaculos(pygame.sprite.Sprite): ### classe dos obstaculos
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
         self.rect.y = random.randint(30,(HEIGHT-self.rect.height))
-        self.speed_x = -5* (1+(0.01*pontos))
+        self.speed_x = -5* (1+(0.05*pontos))
        
     def update(self):
         self.rect.x += self.speed_x 
